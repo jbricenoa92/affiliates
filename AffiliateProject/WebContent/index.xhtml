@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<style>
+.form-container {
+	border: 2px solid black;
+	padding: 5px;
+	width: 500px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.inputs-container {
+	display: flex;
+	justify-content: flex-end;
+}
+</style>
+</h:head>
+<body>
+	<h:form>
+		<h:panelGrid columns="1" styleClass="form-container">
+			<h1>Consulta de afiliados</h1>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Consultar por:" for="consultar"
+					id="checkAfilliate" />
+				<h:selectOneRadio value="#{consultaAfiliado.queryBy}">
+					<f:selectItem itemValue="0" itemLabel="Identificacion" />
+					<f:selectItem itemValue="1" itemLabel="Apellidos" />
+					<f:ajax execute="@form" render="idQuery" />
+				</h:selectOneRadio>
+			</h:panelGrid>
+			<h:panelGrid columns="2" id="idQuery">
+				<h:panelGrid columns="1" styleClass="inputs-container">
+					<h:panelGrid columns="4" style="text-align: right;">
+						<h:outputLabel value="TID: " for="tidNumber" />
+						<h:selectOneMenu id="typeQueryBy" value="#{consultaAfiliado.tid}"
+							disabled="#{consultaAfiliado.optionSelected}">
+							<f:selectItem itemValue="CC" itemLabel="CC" />
+							<f:selectItem itemValue="RC" itemLabel="RC" />
+							<f:selectItem itemValue="CE" itemLabel="CE" />
+							<f:selectItem itemValue="TI" itemLabel="TI" />
+						</h:selectOneMenu>
+						<h:outputLabel value="Numero: " for="tidNumber" />
+						<h:inputText id="inputtypeQueryBy"
+							value="#{consultaAfiliado.tidNumber}"
+							disabled="#{consultaAfiliado.optionSelected}" />
+
+					</h:panelGrid>
+					<h:panelGrid columns="2" style="text-align: right;">
+						<h:outputLabel value="Apellidos: " for="apellido" />
+						<h:inputText id="apellidoID" value="#{consultaAfiliado.apellidos}">
+
+						</h:inputText>
+
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:commandButton value="Enviar" update="@form" process="@parent"
+						action="#{consultaAfiliado.accionQuery()}"
+						style="padding: 10px; border-radius: 50px; font-size: 20px; border: 0">
+					</h:commandButton>
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid>
+			</h:panelGrid>
+			<h:dataTable value="#{consultaAfiliado.afiliados}" var="dato"
+				border="1" style="width:100%">
+				<h:column>
+					<f:facet name="header">TD</f:facet>
+        #{dato.tipoIdentific.descripcion}
+    </h:column>
+				<h:column>
+					<f:facet name="header">Documento</f:facet>
+        #{dato.numero}
+    </h:column>
+				<h:column>
+					<f:facet name="header">Nombre</f:facet>
+        #{dato.nombres}
+    </h:column>
+				<h:column>
+					<f:facet name="header">Apellido</f:facet>
+        #{dato.apellidos}
+    </h:column>
+			</h:dataTable>
+			<h:panelGroup>
+				<h:outputText
+					value="Datos encontrados: #{consultaAfiliado.condition}"
+					rendered="#{!consultaAfiliado.missingData}" />
+				<h:outputText value="Datos faltantes para la consulta."
+					rendered="#{consultaAfiliado.missingData}" />
+			</h:panelGroup>
+		</h:panelGrid>
+	</h:form>
+</body>
+</html>
